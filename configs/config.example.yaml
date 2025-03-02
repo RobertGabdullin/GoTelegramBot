@@ -1,0 +1,10 @@
+bot:
+  token: "token"
+  bot_base_url: "https://localhost:8090"
+  update_timeout: 45
+  update_offset: 0
+
+scrapper:
+  base_url: "https://localhost:8091"
+  update_interval: 30
+  database_url: "postgres://user:password@localhost:5432/db_name?sslmode=disable"
