@@ -2,20 +2,20 @@ package service
 
 import (
 	"fmt"
-	"github.com/RobertGabdullin/GoTelegramBot/internal/scrapper/storage"
+	"github.com/RobertGabdullin/GoTelegramBot/internal/scrapper/repository"
 )
 
 type DBLinkService struct {
-	linkTrackerStorage storage.LinkTrackerStorage
+	linkTrackerStorage repository.LinkTrackerStorage
 }
 
-func NewDBLinkService(linkTrackerStorage storage.LinkTrackerStorage) *DBLinkService {
+func NewDBLinkService(linkTrackerStorage repository.LinkTrackerStorage) *DBLinkService {
 	return &DBLinkService{
 		linkTrackerStorage: linkTrackerStorage,
 	}
 }
 
-func (s *DBLinkService) Register(chatId int) error {
+func (s *DBLinkService) Register(chatId int64) error {
 	exist, err := s.linkTrackerStorage.IsChatPresent(chatId)
 	if err != nil {
 		return fmt.Errorf("error while checking if chat is present: %w", err)
@@ -32,7 +32,7 @@ func (s *DBLinkService) Register(chatId int) error {
 	return nil
 }
 
-func (s *DBLinkService) Track(chatId int, link string) error {
+func (s *DBLinkService) Track(chatId int64, link string) error {
 	exist, err := s.linkTrackerStorage.IsChatPresent(chatId)
 	if err != nil {
 		return fmt.Errorf("error while checking if chat is present: %w", err)
@@ -72,7 +72,7 @@ func (s *DBLinkService) Track(chatId int, link string) error {
 	return nil
 }
 
-func (s *DBLinkService) Untrack(chatId int, link string) error {
+func (s *DBLinkService) Untrack(chatId int64, link string) error {
 	exist, err := s.linkTrackerStorage.IsChatPresent(chatId)
 	if err != nil {
 		return fmt.Errorf("error while checking if chat is present: %w", err)

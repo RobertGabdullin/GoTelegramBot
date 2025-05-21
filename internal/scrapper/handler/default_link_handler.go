@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 type DefaultLinkHandler struct {

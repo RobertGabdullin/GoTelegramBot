@@ -1,4 +1,4 @@
-package storage
+package repository
 
 import (
 	"database/sql"
@@ -32,7 +32,7 @@ func NewPostgresqlLinkTracker(connStr string) (*PostgresqlLinkTracker, error) {
 	return &PostgresqlLinkTracker{db: db}, nil
 }
 
-func (s *PostgresqlLinkTracker) AddChat(chatId int) error {
+func (s *PostgresqlLinkTracker) AddChat(chatId int64) error {
 	_, err := s.db.Exec(addChatQuery, chatId)
 	if err != nil {
 		return fmt.Errorf("error adding chat: %w", err)
@@ -40,7 +40,7 @@ func (s *PostgresqlLinkTracker) AddChat(chatId int) error {
 	return nil
 }
 
-func (s *PostgresqlLinkTracker) RemoveChat(chatId int) error {
+func (s *PostgresqlLinkTracker) RemoveChat(chatId int64) error {
 	_, err := s.db.Exec(removeChatQuery, chatId)
 	if err != nil {
 		return fmt.Errorf("error removing chat: %w", err)
@@ -64,7 +64,7 @@ func (s *PostgresqlLinkTracker) RemoveLink(link string) error {
 	return nil
 }
 
-func (s *PostgresqlLinkTracker) AddChatLink(chatId int, linkId int) error {
+func (s *PostgresqlLinkTracker) AddChatLink(chatId int64, linkId int64) error {
 	_, err := s.db.Exec(addChatLinkQuery, chatId, linkId)
 	if err != nil {
 		return fmt.Errorf("error adding chat link: %w", err)
@@ -72,7 +72,7 @@ func (s *PostgresqlLinkTracker) AddChatLink(chatId int, linkId int) error {
 	return nil
 }
 
-func (s *PostgresqlLinkTracker) RemoveChatLink(chatId int, linkId int) error {
+func (s *PostgresqlLinkTracker) RemoveChatLink(chatId int64, linkId int64) error {
 	_, err := s.db.Exec(removeChatLinkQuery, chatId, linkId)
 	if err != nil {
 		return fmt.Errorf("error removing chat link: %w", err)
@@ -80,7 +80,7 @@ func (s *PostgresqlLinkTracker) RemoveChatLink(chatId int, linkId int) error {
 	return nil
 }
 
-func (s *PostgresqlLinkTracker) GetLinks(chatId int) ([]string, error) {
+func (s *PostgresqlLinkTracker) GetLinks(chatId int64) ([]string, error) {
 	rows, err := s.db.Query(getLinksQuery, chatId)
 	if err != nil {
 		return nil, fmt.Errorf("error getting links: %w", err)
@@ -101,16 +101,16 @@ func (s *PostgresqlLinkTracker) GetLinks(chatId int) ([]string, error) {
 	return links, nil
 }
 
-func (s *PostgresqlLinkTracker) GetIdByLink(link string) (int, error) {
+func (s *PostgresqlLinkTracker) GetIdByLink(link string) (int64, error) {
 	row := s.db.QueryRow(getIdByLinkQuery, link)
-	var linkId int
+	var linkId int64
 	if err := row.Scan(&linkId); err != nil {
 		return 0, fmt.Errorf("error getting link linkId: %w", err)
 	}
 	return linkId, nil
 }
 
-func (s *PostgresqlLinkTracker) IsChatPresent(chatId int) (bool, error) {
+func (s *PostgresqlLinkTracker) IsChatPresent(chatId int64) (bool, error) {
 	rows, err := s.db.Query(isChatPresentQuery, chatId)
 	if err != nil {
 		return false, fmt.Errorf("error checking if chat exists: %w", err)
@@ -129,7 +129,7 @@ func (s *PostgresqlLinkTracker) IsLinkPresent(link string) (bool, error) {
 	return rows.Next(), nil
 }
 
-func (s *PostgresqlLinkTracker) IsChatLinkPresent(chatId int, linkId int) (bool, error) {
+func (s *PostgresqlLinkTracker) IsChatLinkPresent(chatId int64, linkId int64) (bool, error) {
 	rows, err := s.db.Query(isChatLinkPresentQuery, chatId, linkId)
 	if err != nil {
 		return false, fmt.Errorf("error checking if chatlink exists: %w", err)
